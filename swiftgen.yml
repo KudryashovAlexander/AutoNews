@@ -1,0 +1,25 @@
+input_dir: AutoNews/Resources/
+output_dir: AutoNews/Resources/Generated/
+
+strings:
+  inputs:
+    - en.lproj/Localizable.strings
+#    - en.lproj/Localizable.stringsdict
+  outputs:
+    - templateName: structured-swift5
+      params:
+        publicAccess: true
+        enumName: L
+      output: Strings+Generated.swift
+
+# xcassets:
+#   inputs:
+#     - Images.xcassets
+#     - Icons.xcassets
+#   outputs:
+#     - templateName: swift5
+#       params:
+#         forceProvidesNamespaces: true
+#         publicAccess: true
+#         enumName: A
+#       output: XCAssets+Generated.swift
