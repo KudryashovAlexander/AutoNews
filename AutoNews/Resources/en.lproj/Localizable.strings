@@ -1,2 +1,6 @@
 "networkError.notConnect" = "Нет соединения с интернетом";
 "networkError.notCorrectRequest" = "Не правильный запрос";
+
+"news.openFullURL" = "Открыть полную новость на сайте";
+
+"main.news" = "Новости";

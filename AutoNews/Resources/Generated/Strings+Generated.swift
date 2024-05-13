@@ -10,11 +10,19 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 public enum L {
+  public enum Main {
+    /// Новости
+    public static let news = L.tr("Localizable", "main.news", fallback: "Новости")
+  }
   public enum NetworkError {
     /// Нет соединения с интернетом
     public static let notConnect = L.tr("Localizable", "networkError.notConnect", fallback: "Нет соединения с интернетом")
     /// Не правильный запрос
     public static let notCorrectRequest = L.tr("Localizable", "networkError.notCorrectRequest", fallback: "Не правильный запрос")
+  }
+  public enum News {
+    /// Открыть полную новость на сайте
+    public static let openFullURL = L.tr("Localizable", "news.openFullURL", fallback: "Открыть полную новость на сайте")
   }
 }
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length
