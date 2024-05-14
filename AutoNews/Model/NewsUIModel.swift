@@ -17,6 +17,28 @@ struct NewsUIModel {
     let titleImageUrl: String
     let categoryType: String
     
+    init(id: Int, title: String, description: String, publishedDate: Date, url: String, fullUrl: String, titleImageUrl: String, categoryType: String) {
+        self.id = id
+        self.title = title
+        self.description = description
+        self.publishedDate = publishedDate
+        self.url = url
+        self.fullUrl = fullUrl
+        self.titleImageUrl = titleImageUrl
+        self.categoryType = categoryType
+    }
+    
+    init(networkModel: NewsNetModel) {
+        self.id = networkModel.id
+        self.title = networkModel.title
+        self.description = networkModel.description
+        self.publishedDate = Date().createDate(from: networkModel.publishedDate) ?? Date()
+        self.url = networkModel.url
+        self.fullUrl = networkModel.fullUrl
+        self.titleImageUrl = networkModel.titleImageUrl
+        self.categoryType = networkModel.categoryType
+    }
+    
     static let emptyModels: [NewsUIModel] = []
     
     static let example: NewsUIModel = NewsUIModel(id: 8011,

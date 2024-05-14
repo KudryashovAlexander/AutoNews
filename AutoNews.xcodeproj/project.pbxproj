@@ -27,6 +27,8 @@
 		7FE1A5DF2BF26E1C004CC9B2 /* DetailNewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE1A5DE2BF26E1C004CC9B2 /* DetailNewsViewController.swift */; };
 		7FE1A5E62BF26F84004CC9B2 /* DetailNewsViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE1A5E52BF26F84004CC9B2 /* DetailNewsViewModelProtocol.swift */; };
 		7FE1A5E82BF27C2B004CC9B2 /* DetailNewsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE1A5E72BF27C2B004CC9B2 /* DetailNewsViewModel.swift */; };
+		7FE1A5ED2BF33858004CC9B2 /* Date_ext..swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE1A5EC2BF33858004CC9B2 /* Date_ext..swift */; };
+		7FE1A5EF2BF33E7C004CC9B2 /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE1A5EE2BF33E7C004CC9B2 /* WebViewViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +54,9 @@
 		7FE1A5DE2BF26E1C004CC9B2 /* DetailNewsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DetailNewsViewController.swift; path = AutoNews/Scene/DetailNewsScreen/View/DetailNewsViewController.swift; sourceTree = SOURCE_ROOT; };
 		7FE1A5E52BF26F84004CC9B2 /* DetailNewsViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailNewsViewModelProtocol.swift; sourceTree = "<group>"; };
 		7FE1A5E72BF27C2B004CC9B2 /* DetailNewsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailNewsViewModel.swift; sourceTree = "<group>"; };
+		7FE1A5EA2BF33712004CC9B2 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		7FE1A5EC2BF33858004CC9B2 /* Date_ext..swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date_ext..swift; sourceTree = "<group>"; };
+		7FE1A5EE2BF33E7C004CC9B2 /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,9 +91,10 @@
 			children = (
 				7FE1A5A42BF217C4004CC9B2 /* AppDelegate.swift */,
 				7FE1A5A62BF217C4004CC9B2 /* SceneDelegate.swift */,
-				7FE1A5CF2BF22C83004CC9B2 /* Service */,
 				7FE1A5CE2BF22C26004CC9B2 /* Model */,
 				7FE1A5C72BF2241F004CC9B2 /* Scene */,
+				7FE1A5CF2BF22C83004CC9B2 /* Service */,
+				7FE1A5EB2BF33810004CC9B2 /* Helper */,
 				7FE1A5BC2BF21D8C004CC9B2 /* Resources */,
 				7FE1A5AF2BF217C5004CC9B2 /* LaunchScreen.storyboard */,
 				7FE1A5B22BF217C5004CC9B2 /* Info.plist */,
@@ -104,7 +110,6 @@
 				7FE1A5AD2BF217C5004CC9B2 /* Images.xcassets */,
 				7FE1A5BA2BF21D83004CC9B2 /* Icons.xcassets */,
 				7FE1A5B82BF21D33004CC9B2 /* Colors.xcassets */,
-				7FE1A5BD2BF2206E004CC9B2 /* UIFonts_ext..swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -122,6 +127,7 @@
 			children = (
 				7FE1A5DD2BF26DE5004CC9B2 /* MainScreen */,
 				7FE1A5E02BF26E4B004CC9B2 /* DetailNewsScreen */,
+				7FE1A5EE2BF33E7C004CC9B2 /* WebViewViewController.swift */,
 			);
 			path = Scene;
 			sourceTree = "<group>";
@@ -205,6 +211,15 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		7FE1A5EB2BF33810004CC9B2 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				7FE1A5EC2BF33858004CC9B2 /* Date_ext..swift */,
+				7FE1A5BD2BF2206E004CC9B2 /* UIFonts_ext..swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -247,6 +262,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = 7FE1A5982BF217C4004CC9B2;
 			productRefGroup = 7FE1A5A22BF217C4004CC9B2 /* Products */;
@@ -282,8 +298,10 @@
 				7FE1A5D62BF23F9E004CC9B2 /* NetworkClient.swift in Sources */,
 				7FE1A5DA2BF240DD004CC9B2 /* ViewState.swift in Sources */,
 				7FE1A5CB2BF22454004CC9B2 /* MainScreenViewModelProtocol.swift in Sources */,
+				7FE1A5EF2BF33E7C004CC9B2 /* WebViewViewController.swift in Sources */,
 				7FE1A5E62BF26F84004CC9B2 /* DetailNewsViewModelProtocol.swift in Sources */,
 				7FE1A5C42BF22261004CC9B2 /* Strings+Generated.swift in Sources */,
+				7FE1A5ED2BF33858004CC9B2 /* Date_ext..swift in Sources */,
 				7FE1A5DC2BF242E9004CC9B2 /* NewsCellScreenViewCell.swift in Sources */,
 				7FE1A5A92BF217C4004CC9B2 /* MaiScreenViewController.swift in Sources */,
 				7FE1A5D12BF22C9C004CC9B2 /* NewsNetModel.swift in Sources */,
@@ -311,6 +329,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				7FE1A5C02BF221C8004CC9B2 /* en */,
+				7FE1A5EA2BF33712004CC9B2 /* ru */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -323,6 +342,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -386,6 +406,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";

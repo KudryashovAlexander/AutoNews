@@ -12,6 +12,26 @@ final class DetailNewsViewController: UIViewController {
     // MARK: - Private properties
     private var viewModel: DetailNewsViewModelProtocol
     
+    // MARK: - Private layout properies
+    private lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.backgroundColor = .anWhite
+        scrollView.frame = view.bounds
+        scrollView.contentSize = contenSize
+        scrollView.isHidden = false
+        return scrollView
+    }()
+    
+    private lazy var contentView: UIView = {
+        let view = UIView()
+        view.frame.size = contenSize
+        view.backgroundColor = .anWhite
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private var contenSize = CGSize()
+    
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.text = viewModel.model.title
@@ -25,7 +45,7 @@ final class DetailNewsViewController: UIViewController {
     
     private lazy var dateLabel: UILabel = {
         let label = UILabel()
-        label.text = viewModel.model.publishedDate.description
+        label.text = viewModel.model.publishedDate.createString()
         label.font = .Regular.small
         label.textAlignment = .left
         label.numberOfLines = 0
@@ -75,7 +95,6 @@ final class DetailNewsViewController: UIViewController {
         return button
     }()
     
-    
     // MARK: - Lifecicle
     init(viewModel: DetailNewsViewModelProtocol) {
         self.viewModel = viewModel
@@ -94,33 +113,45 @@ final class DetailNewsViewController: UIViewController {
     
     // MARK: - Private methods
     private func layoutSupport() {
+        view.addSubview(scrollView)
+        
+        scrollView.addSubview(contentView)
+        
+        NSLayoutConstraint.activate([
+            contentView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            contentView.heightAnchor.constraint(equalToConstant: view.frame.height)
+        ])
+        
         [titleLabel,
          dateLabel,
          categoryLabel,
          descriptionLabel,
          imageView,
-         fullNewsButton].forEach { view.addSubview($0)}
+         fullNewsButton].forEach { contentView.addSubview($0)}
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            titleLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            titleLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             
-            dateLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            dateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             dateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
             
-            categoryLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            categoryLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             categoryLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
             
-            descriptionLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            descriptionLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             descriptionLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 16),
             
-            imageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 0),
-            imageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0),
+            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
             imageView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
+            imageView.heightAnchor.constraint(equalToConstant: 300),
             
-            fullNewsButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: -16),
+            fullNewsButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             fullNewsButton.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16)
         ])
     }
@@ -128,9 +159,8 @@ final class DetailNewsViewController: UIViewController {
     // MARK: - Private button actions
     @objc
     private func openURLAction() {
-        // открыть вебвью
+        let webViewController = WebViewViewController(webViewURL: viewModel.model.fullUrl)
+        self.navigationController?.pushViewController(webViewController, animated: true)
     }
-    
-    // MARK: - Constants
     
 }

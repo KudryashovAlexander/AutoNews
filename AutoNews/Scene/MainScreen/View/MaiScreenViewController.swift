@@ -13,6 +13,7 @@ final class MaiScreenViewController: UIViewController {
     private let viewModel: MainScreenViewModelProtocol
     private var subscriptions = Set<AnyCancellable>()
     
+    // MARK: - Private layout properies
     private let collectionView : UICollectionView = {
         let collectionView = UICollectionView(frame: .zero,
                                               collectionViewLayout: UICollectionViewFlowLayout())
@@ -52,9 +53,7 @@ final class MaiScreenViewController: UIViewController {
         super.viewWillDisappear(animated)
         bindingOff()
     }
-    
-    // MARK: - Public methods
-    
+        
     // MARK: - Private methods
     private func layoutSettings() {
         view.addSubview(collectionView)
@@ -84,7 +83,6 @@ final class MaiScreenViewController: UIViewController {
     private func bindingOff() {
         subscriptions.removeAll()
     }
-    
     
     private func goToFullNews(_ news: NewsUIModel) {
         let detailVM = DetailNewsViewModel(model: news)
