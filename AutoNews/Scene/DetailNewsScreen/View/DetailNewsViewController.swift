@@ -4,13 +4,15 @@
 //
 //  Created by Александр Кудряшов on 13.05.2024.
 //
-
+import Combine
 import UIKit
 
 final class DetailNewsViewController: UIViewController {
         
     // MARK: - Private properties
     private var viewModel: DetailNewsViewModelProtocol
+    private let imageLoader = ImageLoader()
+    private var subscriptions = Set<AnyCancellable>()
     
     // MARK: - Private layout properies
     private lazy var scrollView: UIScrollView = {
@@ -26,11 +28,11 @@ final class DetailNewsViewController: UIViewController {
         let view = UIView()
         view.frame.size = contenSize
         view.backgroundColor = .anWhite
-        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     private var contenSize = CGSize()
+    private var viewHight = CGFloat()
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -79,7 +81,7 @@ final class DetailNewsViewController: UIViewController {
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(resource: .placeholder)
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -107,8 +109,16 @@ final class DetailNewsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewHight = view.bounds.height
         view.backgroundColor = .anWhite
         layoutSupport()
+        updateContentSize()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        imageLoader.loadImage(from: viewModel.model.titleImageUrl, size: CGSize(width: view.frame.width, height: 500))
+        binding()
     }
     
     // MARK: - Private methods
@@ -116,13 +126,6 @@ final class DetailNewsViewController: UIViewController {
         view.addSubview(scrollView)
         
         scrollView.addSubview(contentView)
-        
-        NSLayoutConstraint.activate([
-            contentView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            contentView.heightAnchor.constraint(equalToConstant: view.frame.height)
-        ])
         
         [titleLabel,
          dateLabel,
@@ -149,11 +152,31 @@ final class DetailNewsViewController: UIViewController {
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
             imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
             imageView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
-            imageView.heightAnchor.constraint(equalToConstant: 300),
+            imageView.heightAnchor.constraint(equalToConstant: 400),
             
             fullNewsButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             fullNewsButton.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16)
         ])
+        
+        view.layoutIfNeeded()
+    }
+    
+    private func binding() {
+        imageLoader.image
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] image in
+                if let image = image {
+                    self?.imageView.image = image
+                }
+            }.store(in: &subscriptions)
+    }
+    
+    private func updateContentSize() {
+        let heightElements: CGFloat = CGFloat(20 + titleLabel.bounds.height + 16 + dateLabel.bounds.height + 16 + descriptionLabel.bounds.height + 16 + imageView.frame.height + 16 + fullNewsButton.bounds.height + 16)
+        let maxView = max(heightElements,viewHight)
+        contenSize = CGSize(width: view.frame.width, height: maxView)
+        scrollView.contentSize = contenSize
+        contentView.frame.size = contenSize
     }
     
     // MARK: - Private button actions

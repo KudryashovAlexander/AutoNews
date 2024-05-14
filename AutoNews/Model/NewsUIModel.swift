@@ -14,10 +14,10 @@ struct NewsUIModel {
     let publishedDate: Date
     let url: String
     let fullUrl: String
-    let titleImageUrl: String
+    let titleImageUrl: URL?
     let categoryType: String
     
-    init(id: Int, title: String, description: String, publishedDate: Date, url: String, fullUrl: String, titleImageUrl: String, categoryType: String) {
+    init(id: Int, title: String, description: String, publishedDate: Date, url: String, fullUrl: String, titleImageUrl: URL?, categoryType: String) {
         self.id = id
         self.title = title
         self.description = description
@@ -35,7 +35,11 @@ struct NewsUIModel {
         self.publishedDate = Date().createDate(from: networkModel.publishedDate) ?? Date()
         self.url = networkModel.url
         self.fullUrl = networkModel.fullUrl
-        self.titleImageUrl = networkModel.titleImageUrl
+        if networkModel.titleImageUrl != nil {
+            self.titleImageUrl = URL(string:  networkModel.titleImageUrl!)
+        } else {
+            self.titleImageUrl = nil
+        }
         self.categoryType = networkModel.categoryType
     }
     
@@ -47,7 +51,7 @@ struct NewsUIModel {
                                                   publishedDate: Date(),
                                                   url: "avto-novosti/mercedes_cle_cabriolet",
                                                   fullUrl: "https://www.autodoc.ru/avto-novosti/mercedes_cle_cabriolet",
-                                                  titleImageUrl: "https://file.autodoc.ru/news/avto-novosti/4325548_12.jpg",
+                                                  titleImageUrl: URL(string:"https://file.autodoc.ru/news/avto-novosti/4325548_12.jpg")!,
                                                   categoryType: "Автомобильные новости")
     static let examples: [NewsUIModel] = [NewsUIModel(id: 8011,
                                                       title: "Mercedes-AMG CLE 53 Cabriolet — новинка с тканевым верхом",
@@ -55,7 +59,7 @@ struct NewsUIModel {
                                                       publishedDate: Date(),
                                                       url: "avto-novosti/mercedes_cle_cabriolet",
                                                       fullUrl: "https://www.autodoc.ru/avto-novosti/mercedes_cle_cabriolet",
-                                                      titleImageUrl: "https://file.autodoc.ru/news/avto-novosti/4325548_12.jpg",
+                                                      titleImageUrl: URL(string:"https://file.autodoc.ru/news/avto-novosti/4325548_12.jpg")!,
                                                       categoryType: "Автомобильные новости"),
                                           NewsUIModel(id: 8001,
                                                       title: "Гибридный кроссовер Chery с большим запасом хода",
@@ -63,7 +67,7 @@ struct NewsUIModel {
                                                       publishedDate: Date(),
                                                       url: "avto-novosti/chery_omoda",
                                                       fullUrl: "https://www.autodoc.ru/avto-novosti/chery_omoda",
-                                                      titleImageUrl: "https://file.autodoc.ru/news/avto-novosti/1157132644_2.jpg",
+                                                      titleImageUrl: URL(string:"https://file.autodoc.ru/news/avto-novosti/1157132644_2.jpg")!,
                                                       categoryType: "Автомобильные новости"),
                                           NewsUIModel(id: 8009,
                                                       title: "Volkswagen California стал роскошнее и просторнее",
@@ -71,7 +75,7 @@ struct NewsUIModel {
                                                       publishedDate: Date(),
                                                       url: "avto-novosti/volkswagen_california",
                                                       fullUrl: "https://www.autodoc.ru/avto-novosti/volkswagen_california",
-                                                      titleImageUrl: "https://file.autodoc.ru/news/avto-novosti/1681281198_7.jpg",
+                                                      titleImageUrl: URL(string:"https://file.autodoc.ru/news/avto-novosti/1681281198_7.jpg")!,
                                                       categoryType: "Автомобильные новости"),
                                           NewsUIModel(id: 8008,
                                                       title: "Открытие магазина в г. Пересвет (Московская область)",
@@ -79,7 +83,7 @@ struct NewsUIModel {
                                                       publishedDate: Date(),
                                                       url: "novosti-kompanii/1940",
                                                       fullUrl: "https://www.autodoc.ru/novosti-kompanii/1940",
-                                                      titleImageUrl: "",
+                                                      titleImageUrl: nil,
                                                       categoryType: "Новости компании"),
                                           NewsUIModel(id: 8006,
                                                       title: "Nissan выпускает электрический фургон Evalia Townstar",
@@ -87,7 +91,7 @@ struct NewsUIModel {
                                                       publishedDate: Date(),
                                                       url: "avto-novosti/nissan_evalia",
                                                       fullUrl: "https://www.autodoc.ru/avto-novosti/nissan_evalia",
-                                                      titleImageUrl: "https://file.autodoc.ru/news/avto-novosti/1581004161_5.jpg",
+                                                      titleImageUrl: URL(string:"https://file.autodoc.ru/news/avto-novosti/1581004161_5.jpg")!,
                                                       categoryType: "Автомобильные новости")]
     
     

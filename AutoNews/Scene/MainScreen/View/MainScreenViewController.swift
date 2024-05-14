@@ -1,5 +1,5 @@
 //
-//  MaiScreenViewController.swift
+//  MainScreenViewController.swift
 //  AutoNews
 //
 //  Created by Александр Кудряшов on 13.05.2024.
@@ -7,7 +7,8 @@
 import Combine
 import UIKit
 
-final class MaiScreenViewController: UIViewController {
+
+final class MainScreenViewController: UIViewController {
     
     // MARK: - Private properties
     private let viewModel: MainScreenViewModelProtocol
@@ -23,6 +24,26 @@ final class MaiScreenViewController: UIViewController {
         collectionView.alwaysBounceVertical = true
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
+    }()
+    
+    private lazy var emptyCollectionLabel: UILabel = {
+        let label = UILabel()
+        label.text = L.Main.empty
+        label.font = .Regular.medium
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.textColor = .anBlack
+        label.isHidden = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.color = .anDarkBlue
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        return activityIndicator
     }()
 
     // MARK: - Lifecicle
@@ -42,27 +63,37 @@ final class MaiScreenViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         layoutSettings()
+        viewModel.viewDidLoad()
+        binding()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        binding()
+        viewModel.viewWillAppear()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        bindingOff()
+        viewModel.viewWillDisAppear()
     }
         
     // MARK: - Private methods
     private func layoutSettings() {
-        view.addSubview(collectionView)
-        
+        [emptyCollectionLabel,
+         collectionView,
+         activityIndicator].forEach {view.addSubview($0) }
+         
         NSLayoutConstraint.activate([
+            emptyCollectionLabel.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            emptyCollectionLabel.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+            
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            activityIndicator.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
         ])
     }
     
@@ -70,18 +101,28 @@ final class MaiScreenViewController: UIViewController {
         viewModel.news
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.collectionView.reloadData()
+                guard let self else { return }
+                if self.viewModel.oldCount != self.viewModel.newCount {
+                    self.updateCollectionView(oldCount: self.viewModel.oldCount,
+                                              newCount: self.viewModel.newCount)
+                }
             }.store(in: &subscriptions)
         
-        viewModel.currentNews
+        viewModel.viewState
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] news in
-                self?.goToFullNews(news)
+            .sink { [weak self] state in
+                self?.changeViewState(state)
             }.store(in: &subscriptions)
     }
     
-    private func bindingOff() {
-        subscriptions.removeAll()
+    func updateCollectionView(oldCount: Int, newCount: Int) {
+        self.collectionView.performBatchUpdates {
+            var indexPatch: [IndexPath] = []
+            for i in oldCount..<newCount {
+                indexPatch.append(IndexPath(row: i, section: 0))
+            }
+            collectionView.insertItems(at: indexPatch)
+        }
     }
     
     private func goToFullNews(_ news: NewsUIModel) {
@@ -90,10 +131,27 @@ final class MaiScreenViewController: UIViewController {
         self.navigationController?.pushViewController(detailVC, animated: true)
     }
     
+    private func changeViewState(_ viewState: ViewState) {
+        switch viewState {
+        case .loading:
+            activityIndicator.startAnimating()
+            collectionView.isHidden = false
+            emptyCollectionLabel.isHidden = true
+        case .done:
+            activityIndicator.stopAnimating()
+            collectionView.isHidden = false
+            emptyCollectionLabel.isHidden = true
+        case .empty:
+            activityIndicator.stopAnimating()
+            collectionView.isHidden = true
+            emptyCollectionLabel.isHidden = false
+        }
+    }
+    
 }
 
 // MARK: - UICollectionViewDataSource
-extension MaiScreenViewController: UICollectionViewDataSource {
+extension MainScreenViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         1
@@ -115,12 +173,19 @@ extension MaiScreenViewController: UICollectionViewDataSource {
 }
 
 //MARK: - UICollectionViewDelegate
-extension MaiScreenViewController: UICollectionViewDelegateFlowLayout {
+extension MainScreenViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        viewModel.presentFullNews(index: indexPath.row)
+        let newsModel = viewModel.getNews(indexPath.row)
+        goToFullNews(newsModel)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.bounds.width, height: 300)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.row + 1 == viewModel.getNewsCount() {
+            viewModel.addNews()
+        }
     }
 }

@@ -12,11 +12,15 @@ protocol MainScreenViewModelProtocol: AnyObject {
     
     var news: CurrentValueSubject<[NewsUIModel],Never> { get }
     var viewState: CurrentValueSubject<ViewState,Never> { get }
-    var currentNews: PassthroughSubject<NewsUIModel,Never> { get }
+    var oldCount: Int { get }
+    var newCount: Int { get }
     
     func getNewsCount() -> Int
     func getNews(_ index: Int) -> NewsUIModel
-    func loadNews()
+    
+    func viewDidLoad()
+    func viewWillAppear()
+    func viewWillDisAppear()
+
     func addNews()
-    func presentFullNews(index: Int)
 }

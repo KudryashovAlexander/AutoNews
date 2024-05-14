@@ -96,8 +96,7 @@ final class WebViewViewController: UIViewController {
 
     private func checkInternet() {
         if viewState.value == .empty {
-            //ErrorHandler.handle(error: AppError.networkError(code: nil))
-            // TODO: - Обработчик ошибок
+            ErrorHandler.handle(error: AppError.networkError)
             webView.stopLoading()
         }
     }

@@ -20,6 +20,6 @@ struct NewsNetModel: Codable {
     let publishedDate: String
     let url: String
     let fullUrl: String
-    let titleImageUrl: String
+    let titleImageUrl: String?
     let categoryType: String
 }

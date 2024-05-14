@@ -11,14 +11,20 @@ import Foundation
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 public enum L {
   public enum Main {
+    /// Новостей пока нет
+    public static let empty = L.tr("Localizable", "main.empty", fallback: "Новостей пока нет")
     /// Новости
     public static let news = L.tr("Localizable", "main.news", fallback: "Новости")
   }
   public enum NetworkError {
+    /// Ошибка запроса, код ошибки
+    public static let httpStatusCode = L.tr("Localizable", "networkError.httpStatusCode", fallback: "Ошибка запроса, код ошибки")
     /// Нет соединения с интернетом
     public static let notConnect = L.tr("Localizable", "networkError.notConnect", fallback: "Нет соединения с интернетом")
     /// Не правильный запрос
     public static let notCorrectRequest = L.tr("Localizable", "networkError.notCorrectRequest", fallback: "Не правильный запрос")
+    /// Ошибка парсинга
+    public static let parsing = L.tr("Localizable", "networkError.parsing", fallback: "Ошибка парсинга")
   }
   public enum News {
     /// Открыть полную новость на сайте
