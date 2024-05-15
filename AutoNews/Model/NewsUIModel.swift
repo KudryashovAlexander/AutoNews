@@ -17,7 +17,13 @@ struct NewsUIModel {
     let titleImageUrl: URL?
     let categoryType: String
     
-    init(id: Int, title: String, description: String, publishedDate: Date, url: String, fullUrl: String, titleImageUrl: URL?, categoryType: String) {
+    init(id: Int, title: String,
+         description: String,
+         publishedDate: Date,
+         url: String,
+         fullUrl: String,
+         titleImageUrl: URL?,
+         categoryType: String) {
         self.id = id
         self.title = title
         self.description = description
@@ -43,8 +49,7 @@ struct NewsUIModel {
         self.categoryType = networkModel.categoryType
     }
     
-    static let emptyModels: [NewsUIModel] = []
-    
+    /*
     static let example: NewsUIModel = NewsUIModel(id: 8011,
                                                   title: "Mercedes-AMG CLE 53 Cabriolet — новинка с тканевым верхом",
                                                   description: "Незадолго до прихода лета в Северное полушарие Mercedes-AMG представил кабриолет CLE 53 4Matic+",
@@ -93,6 +98,6 @@ struct NewsUIModel {
                                                       fullUrl: "https://www.autodoc.ru/avto-novosti/nissan_evalia",
                                                       titleImageUrl: URL(string:"https://file.autodoc.ru/news/avto-novosti/1581004161_5.jpg")!,
                                                       categoryType: "Автомобильные новости")]
-    
+    */
     
 }

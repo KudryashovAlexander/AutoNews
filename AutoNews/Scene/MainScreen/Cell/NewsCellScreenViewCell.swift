@@ -15,11 +15,13 @@ final class NewsCellScreenViewCell: UICollectionViewCell {
     // MARK: - Private methods
     private let imageLoader = ImageLoader()
     private var subscriptions = Set<AnyCancellable>()
+    private var url: URL?
     
     // MARK: - Private layout properties
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(resource: .placeholder)
+        imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -39,6 +41,7 @@ final class NewsCellScreenViewCell: UICollectionViewCell {
     private lazy var gradientImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(resource: .gradient)
+        imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -60,14 +63,16 @@ final class NewsCellScreenViewCell: UICollectionViewCell {
         if imageURL != nil {
             imageLoader.loadImage(from: imageURL, size: CGSize(width: contentView.frame.width, height: contentView.frame.height))
             binding()
+        } else {
+            imageView.image = UIImage(resource: .placeholder)
         }
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        titleLabel.text = ""
         imageLoader.cancelLoading()
-        self.imageView.image = UIImage(resource: .placeholder)
+        subscriptions.removeAll()
+        imageView.image = UIImage(resource: .placeholder)
     }
     
     // MARK: - Private methods
@@ -83,14 +88,14 @@ final class NewsCellScreenViewCell: UICollectionViewCell {
             imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
-            gradientImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            gradientImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             gradientImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             gradientImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             gradientImageView.heightAnchor.constraint(equalToConstant: 75),
             
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
+            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10)
         ])
     }
     

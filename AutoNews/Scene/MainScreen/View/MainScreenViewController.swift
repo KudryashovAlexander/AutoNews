@@ -15,9 +15,9 @@ final class MainScreenViewController: UIViewController {
     private var subscriptions = Set<AnyCancellable>()
     
     // MARK: - Private layout properies
-    private let collectionView : UICollectionView = {
+    private lazy var collectionView : UICollectionView = {
         let collectionView = UICollectionView(frame: .zero,
-                                              collectionViewLayout: UICollectionViewFlowLayout())
+                                              collectionViewLayout:  makeLayout())
         collectionView.register(NewsCellScreenViewCell.self,
                                 forCellWithReuseIdentifier: NewsCellScreenViewCell.identifier)
         collectionView.backgroundColor = .anWhite
@@ -126,9 +126,12 @@ final class MainScreenViewController: UIViewController {
     }
     
     private func goToFullNews(_ news: NewsUIModel) {
-        let detailVM = DetailNewsViewModel(model: news)
-        let detailVC = DetailNewsViewController(viewModel: detailVM)
+        let detailVC = DetailNewsViewController(model: news)
         self.navigationController?.pushViewController(detailVC, animated: true)
+    }
+    
+    private func makeLayout() -> UICollectionViewLayout {
+        view.bounds.width > 430 ? createMozaicLayout(size: view.bounds.size) : createSingleLayout()
     }
     
     private func changeViewState(_ viewState: ViewState) {
@@ -173,19 +176,108 @@ extension MainScreenViewController: UICollectionViewDataSource {
 }
 
 //MARK: - UICollectionViewDelegate
-extension MainScreenViewController: UICollectionViewDelegateFlowLayout {
+extension MainScreenViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let newsModel = viewModel.getNews(indexPath.row)
         goToFullNews(newsModel)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.width, height: 300)
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if indexPath.row + 1 == viewModel.getNewsCount() {
             viewModel.addNews()
         }
+    }
+}
+
+// MARK: - UICollectionViewLayout
+extension MainScreenViewController {
+    private func createSingleLayout() -> UICollectionViewLayout {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                               heightDimension: .fractionalHeight(1.0)))
+        item.contentInsets = NSDirectionalEdgeInsets(top: 1, leading: 0, bottom: 1, trailing: 0)
+        let group = NSCollectionLayoutGroup.horizontal(
+            layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                               heightDimension: .fractionalHeight(1/4)),
+            subitems: [item])
+        let section = NSCollectionLayoutSection(group: group)
+        
+        let layout = UICollectionViewCompositionalLayout { (sectionIndex: Int, layoutEnv: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection?
+            in
+            return section }
+        
+        let config = UICollectionViewCompositionalLayoutConfiguration()
+        config.interSectionSpacing = 0
+        layout.configuration = config
+        return layout
+    }
+    
+    
+    private func createMozaicLayout(isLandscape: Bool = false, size: CGSize) -> UICollectionViewLayout {
+        return UICollectionViewCompositionalLayout { (sectionIndex, layoutEnv) -> NSCollectionLayoutSection? in
+            let leadingItemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5),
+                                                         heightDimension: .fractionalHeight(1.0))
+            let leadingItem = NSCollectionLayoutItem(layoutSize: leadingItemSize)
+            leadingItem.contentInsets = NSDirectionalEdgeInsets(top: 2, leading: 2, bottom: 2, trailing: 2)
+            
+            let trailingItemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                          heightDimension: .fractionalHeight(0.3))
+            let trailingItem = NSCollectionLayoutItem(layoutSize: trailingItemSize)
+            trailingItem.contentInsets = NSDirectionalEdgeInsets(top: 2, leading: 2, bottom: 2, trailing: 2)
+            
+            let trailingLeftGroup = NSCollectionLayoutGroup.vertical(
+                layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.25),
+                                                   heightDimension: .fractionalHeight(1.0)),
+                subitem: trailingItem, count: 2)
+            
+            let trailingRightGroup = NSCollectionLayoutGroup.vertical(
+                layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.25),
+                                                   heightDimension: .fractionalHeight(1.0)),
+                subitem: trailingItem, count: 2)
+            
+            let fractionalHeight = isLandscape ? NSCollectionLayoutDimension.fractionalHeight(0.8) : NSCollectionLayoutDimension.fractionalHeight(0.4)
+            let groupDimensionHeight: NSCollectionLayoutDimension = fractionalHeight
+            
+            let rightGroup = NSCollectionLayoutGroup.horizontal(
+                layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                   heightDimension: groupDimensionHeight),
+                subitems: [leadingItem, trailingLeftGroup, trailingRightGroup])
+            
+            let leftGroup = NSCollectionLayoutGroup.horizontal(
+                layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                   heightDimension: groupDimensionHeight),
+                subitems: [trailingRightGroup, trailingLeftGroup, leadingItem])
+            
+            let height = isLandscape ? size.height / 0.9 : size.height / 1.25
+            let megaGroup = NSCollectionLayoutGroup.vertical(
+                layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                   heightDimension: .estimated(height)),
+                subitems: [rightGroup, leftGroup])
+            
+            let section = NSCollectionLayoutSection(group: megaGroup)
+            return section
+        }
+    }
+}
+
+extension MainScreenViewController {
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        coordinator.animate(alongsideTransition: { [weak self] context in
+            guard let `self` = self else { return }
+            let size = context.containerView.bounds.size
+            
+            switch UIDevice.current.orientation {
+            case .landscapeLeft, .landscapeRight:
+                let layout = self.createMozaicLayout(isLandscape: true, size: size)
+                self.collectionView.setCollectionViewLayout(layout, animated: true, completion: nil)
+                self.collectionView.collectionViewLayout = layout
+            case .portrait, .portraitUpsideDown:
+                let layout = self.createMozaicLayout(isLandscape: false, size: size)
+                self.collectionView.setCollectionViewLayout(layout, animated: true, completion: nil)
+            default:
+                return
+            }
+        })
     }
 }

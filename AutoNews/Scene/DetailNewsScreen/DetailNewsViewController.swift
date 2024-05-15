@@ -10,7 +10,7 @@ import UIKit
 final class DetailNewsViewController: UIViewController {
         
     // MARK: - Private properties
-    private var viewModel: DetailNewsViewModelProtocol
+    private var model: NewsUIModel
     private let imageLoader = ImageLoader()
     private var subscriptions = Set<AnyCancellable>()
     
@@ -36,7 +36,7 @@ final class DetailNewsViewController: UIViewController {
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.text = viewModel.model.title
+        label.text = model.title
         label.font = .Bold.extraLarge
         label.textAlignment = .left
         label.numberOfLines = 0
@@ -47,7 +47,7 @@ final class DetailNewsViewController: UIViewController {
     
     private lazy var dateLabel: UILabel = {
         let label = UILabel()
-        label.text = viewModel.model.publishedDate.createString()
+        label.text = model.publishedDate.createString()
         label.font = .Regular.small
         label.textAlignment = .left
         label.numberOfLines = 0
@@ -58,7 +58,7 @@ final class DetailNewsViewController: UIViewController {
     
     private lazy var categoryLabel: UILabel = {
         let label = UILabel()
-        label.text = viewModel.model.categoryType
+        label.text = model.categoryType
         label.font = .Regular.small
         label.textAlignment = .right
         label.numberOfLines = 1
@@ -69,7 +69,7 @@ final class DetailNewsViewController: UIViewController {
     
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = viewModel.model.description
+        label.text = model.description
         label.font = .Regular.medium
         label.textAlignment = .left
         label.numberOfLines = 0
@@ -98,8 +98,8 @@ final class DetailNewsViewController: UIViewController {
     }()
     
     // MARK: - Lifecicle
-    init(viewModel: DetailNewsViewModelProtocol) {
-        self.viewModel = viewModel
+    init(model: NewsUIModel) {
+        self.model = model
         super .init(nibName: nil, bundle: nil)
     }
     
@@ -117,7 +117,7 @@ final class DetailNewsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        imageLoader.loadImage(from: viewModel.model.titleImageUrl, size: CGSize(width: view.frame.width, height: 500))
+        imageLoader.loadImage(from: model.titleImageUrl, size: CGSize(width: view.frame.width, height: 500))
         binding()
     }
     
@@ -182,7 +182,7 @@ final class DetailNewsViewController: UIViewController {
     // MARK: - Private button actions
     @objc
     private func openURLAction() {
-        let webViewController = WebViewViewController(webViewURL: viewModel.model.fullUrl)
+        let webViewController = WebViewViewController(webViewURL: model.fullUrl)
         self.navigationController?.pushViewController(webViewController, animated: true)
     }
     
