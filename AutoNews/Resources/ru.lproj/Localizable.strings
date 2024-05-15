@@ -1,0 +1,9 @@
+"networkError.notConnect" = "Нет соединения с интернетом";
+"networkError.notCorrectRequest" = "Не правильный запрос";
+"networkError.parsing" = "Ошибка парсинга";
+"networkError.httpStatusCode" = "Ошибка запроса, код ошибки";
+
+"news.openFullURL" = "Открыть полную новость на сайте";
+
+"main.news" = "Новости";
+"main.empty" = "Новостей пока нет";
