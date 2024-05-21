@@ -15,7 +15,7 @@ final class NewsCellScreenViewCell: UICollectionViewCell {
     // MARK: - Private methods
     private let imageLoader = ImageLoader()
     private var subscriptions = Set<AnyCancellable>()
-    private var url: URL?
+    private var currentURL: URL?
     
     // MARK: - Private layout properties
     private lazy var imageView: UIImageView = {
@@ -46,6 +46,14 @@ final class NewsCellScreenViewCell: UICollectionViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
+    
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.color = .anDarkBlue
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        return activityIndicator
+    }()
 
     // MARK: - Lifecicle
     override init(frame: CGRect) {
@@ -60,19 +68,24 @@ final class NewsCellScreenViewCell: UICollectionViewCell {
     // MARK: - Public methods
     func configure(title: String, imageURL: URL?) {
         titleLabel.text = title
-        if imageURL != nil {
-            imageLoader.loadImage(from: imageURL, size: CGSize(width: contentView.frame.width, height: contentView.frame.height))
+        currentURL = imageURL
+        
+        imageLoader.cancelLoading()
+        subscriptions.removeAll()
+        
+        if let imageURL = imageURL {
+            imageLoader.loadImage(from: imageURL)
             binding()
-        } else {
-            imageView.image = UIImage(resource: .placeholder)
         }
+
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         imageLoader.cancelLoading()
         subscriptions.removeAll()
-        imageView.image = UIImage(resource: .placeholder)
+        imageView.image = UIImage(named: "placeholder")
+        currentURL = nil
     }
     
     // MARK: - Private methods
@@ -80,7 +93,7 @@ final class NewsCellScreenViewCell: UICollectionViewCell {
         
         [imageView,
          gradientImageView,
-         titleLabel].forEach { contentView.addSubview($0)}
+         titleLabel, activityIndicator].forEach { contentView.addSubview($0)}
         
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
@@ -95,7 +108,10 @@ final class NewsCellScreenViewCell: UICollectionViewCell {
             
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10)
+            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            
+            activityIndicator.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
         ])
     }
     
@@ -103,10 +119,25 @@ final class NewsCellScreenViewCell: UICollectionViewCell {
         imageLoader.image
             .receive(on: DispatchQueue.main)
             .sink { [weak self] image in
+                guard let self = self else { return }
                 if let image = image {
-                    self?.imageView.image = image
+                    self.imageView.image = image.downSample(to: CGSize(width: self.contentView.frame.width, height: self.contentView.frame.height))
+                } else {
+                    self.imageView.image = UIImage(named: "placeholder")
                 }
             }.store(in: &subscriptions)
+        
+        imageLoader.isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                if isLoading {
+                    self?.activityIndicator.startAnimating()
+                } else {
+                    self?.activityIndicator.stopAnimating()
+                }
+            }.store(in: &subscriptions)
+        
     }
+    
     
 }

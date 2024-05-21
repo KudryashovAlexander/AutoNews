@@ -187,6 +187,7 @@ extension MainScreenViewController: UICollectionViewDelegate {
             viewModel.addNews()
         }
     }
+    
 }
 
 // MARK: - UICollectionViewLayout

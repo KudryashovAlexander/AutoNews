@@ -117,7 +117,7 @@ final class DetailNewsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        imageLoader.loadImage(from: model.titleImageUrl, size: CGSize(width: view.frame.width, height: 500))
+        imageLoader.loadImage(from: model.titleImageUrl)
         binding()
     }
     

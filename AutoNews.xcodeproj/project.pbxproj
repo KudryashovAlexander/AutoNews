@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7F7F02D52BFBAE8A005D0C32 /* UIImage_ext..swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7F02D42BFBAE8A005D0C32 /* UIImage_ext..swift */; };
 		7FE1A5A52BF217C4004CC9B2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE1A5A42BF217C4004CC9B2 /* AppDelegate.swift */; };
 		7FE1A5A72BF217C4004CC9B2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE1A5A62BF217C4004CC9B2 /* SceneDelegate.swift */; };
 		7FE1A5A92BF217C4004CC9B2 /* MainScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE1A5A82BF217C4004CC9B2 /* MainScreenViewController.swift */; };
@@ -36,6 +37,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7F7F02D42BFBAE8A005D0C32 /* UIImage_ext..swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage_ext..swift; sourceTree = "<group>"; };
 		7FE1A5A12BF217C4004CC9B2 /* AutoNews.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoNews.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FE1A5A42BF217C4004CC9B2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7FE1A5A62BF217C4004CC9B2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -209,6 +211,7 @@
 				7FE1A5EC2BF33858004CC9B2 /* Date_ext..swift */,
 				7FE1A5BD2BF2206E004CC9B2 /* UIFonts_ext..swift */,
 				7FE1A5F22BF35248004CC9B2 /* UIViewController_ext..swift */,
+				7F7F02D42BFBAE8A005D0C32 /* UIImage_ext..swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -350,6 +353,7 @@
 				7FE1A5DF2BF26E1C004CC9B2 /* DetailNewsViewController.swift in Sources */,
 				7FE1A5BE2BF2206E004CC9B2 /* UIFonts_ext..swift in Sources */,
 				7FE1A5F12BF35101004CC9B2 /* ErrorHandler.swift in Sources */,
+				7F7F02D52BFBAE8A005D0C32 /* UIImage_ext..swift in Sources */,
 				7FE1A5C92BF22435004CC9B2 /* MainScreenViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
